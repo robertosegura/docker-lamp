@@ -1,0 +1,27 @@
+php:
+  build: ./php
+  ports:
+    - '80:80'
+  volumes:
+    - ./code:/var/www/html
+    - ./vhosts:/etc/apache2/sites-enabled
+  links:
+    - mysql
+
+mysql:
+  image: mysql:5.7.12
+  ports:
+    - '3306:3306'
+  volumes:
+    - ./mysql/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+  environment:
+    - MYSQL_ROOT_PASSWORD=root
+    - MYSQL_DATABASE=db
+
+adminer:
+  image: adminer
+  restart: always
+  ports:
+    - '8080:8080'
+  links:
+    - mysql
